@@ -8,7 +8,7 @@ public interface IDataStore<T> {
      * Create Object inside dataStore
      * @param id
      */
-    public void create(String id, T t);
+    public void createOrUpdate(String id, T t);
 
     /**
      * Get object from datastore

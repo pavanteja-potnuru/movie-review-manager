@@ -2,6 +2,17 @@ package reviewmanager.services;
 
 public interface IUserManager {
 
-    void createUser(String string);
+    /**
+     * CreateUser
+     * @param string
+     */
+    public void addUser(String string);
+
+    /**
+     * Print all Users
+     * @param name
+     * @return
+     */
+    public void printUsers();
 
 }

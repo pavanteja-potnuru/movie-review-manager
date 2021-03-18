@@ -15,7 +15,7 @@ public class DataStore<T> implements IDataStore<T> {
      * Create Object inside dataStore
      * @param id
      */
-    public void create(String id, T t) {
+    public void createOrUpdate(String id, T t) {
         collection.put(id, t);
     }
 

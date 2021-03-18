@@ -24,24 +24,29 @@ public class MovieManager implements IMovieManager{
      * @param releaseDate
      * @param genere
      */
-    public void createMovie(String name, LocalDate releaseDate, List<String> genreStrings) {
-        serviceLogger.logInfo(String.format("Create movie with name %s Initailized", name), Color.ANSI_YELLOW);
-        if(movieDataStore.get(name) != null) {
-            serviceLogger.logError(String.format("Create user with name %s Initailized", name));
-            return;
+    public void addMovie(String name, LocalDate releaseDate, List<String> genreStrings) {
+        try{
+            serviceLogger.logInfo(String.format("Create movie with name %s Initailized", name), Color.ANSI_YELLOW);
+            validateInput(name);
+            HashSet<Genre> genres = (HashSet<Genre>)genreStrings.stream().map((genre) -> {return Genre.valueOf(genre.toUpperCase());}).collect(Collectors.toSet());
+            movieDataStore.createOrUpdate(name, new Movie(name, releaseDate, genres));
+            serviceLogger.logInfo(String.format("Movie %s created successfully", name));
         }
-        HashSet<Genre> genres = (HashSet<Genre>)genreStrings.stream().map((genre) -> {return Genre.valueOf(genre.toUpperCase());}).collect(Collectors.toSet());
-        movieDataStore.create(name, new Movie(name, releaseDate, genres));
-        serviceLogger.logInfo(String.format("Movie %s created successfully", name));
+        catch(ServiceException ex) {
+            serviceLogger.logError(ex.getMessage());
+        }
     }
 
     /**
-     * get movie by name
+     * Validate input
      * @param name
      * @return
+     * @throws ServiceException
      */
-    public Movie getMovie(String name) {
-        return movieDataStore.get(name);
+    private void validateInput(String name) throws ServiceException {
+        if(movieDataStore.get(name) != null) {
+            throw new ServiceException(String.format("Movie with name %s already exists", name));
+        }
     }
 
     /**

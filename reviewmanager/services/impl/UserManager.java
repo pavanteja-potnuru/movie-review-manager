@@ -17,33 +17,38 @@ public class UserManager implements IUserManager {
      * Create user
      * @param name
      */
-    public void createUser(String name) {
-        serviceLogger.logInfo(String.format("Create user with name %s Initailized", name), Color.ANSI_YELLOW);
-        if(userDataStore.get(name) != null) {
-            serviceLogger.logError(String.format("User with name %s already exists", name));
-            return;
+    public void addUser(String name) {
+        try {
+            serviceLogger.logInfo(String.format("Create user with name %s Initailized", name), Color.ANSI_YELLOW);
+            validateInput(name);
+            userDataStore.createOrUpdate(name, new User(name));
+            serviceLogger.logInfo(String.format("User %s created successfully", name));
         }
-        userDataStore.create(name, new User(name));
-        serviceLogger.logInfo(String.format("User %s created successfully", name));
+        catch (ServiceException ex) {
+            serviceLogger.logError(ex.getMessage());
+        }
     }
 
     /**
-     * get user by user name
+     * validate user by username
      * @param name
      * @return
+     * @throws ServiceException
      */
-    public User getUser(String name) {
-        return userDataStore.get(name);
+    private void validateInput(String name) throws ServiceException {
+        if(userDataStore.get(name) != null) {
+            throw new ServiceException(String.format("User with name %s already exists", name));
+        }
     }
 
     /**
-     * print Users
+     * Print all Users
      * @param name
      * @return
      */
     public void printUsers() {
         userDataStore.getCollectionStream().forEach((userkvp) -> {
-            System.out.println(userkvp.getKey());
+            System.out.println(userkvp.getKey() + " " + userkvp.getValue().getRole());
         });
     }
 }

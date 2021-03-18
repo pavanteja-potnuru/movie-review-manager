@@ -6,12 +6,32 @@ public enum Role {
     Expert (4),
     Admin (8);
 
-    private final int value;
-    private Role(int value) {
-        this.value = value;
+    /**
+     * weightage 
+     */
+    private final int weightage;
+    private Role(int weightage) {
+        this.weightage = weightage;
     }
 
-    public int getValue() {
-        return value;
+    public int getWeightage() {
+        return weightage;
+    }
+
+    public Role nextRole() {
+        switch(this) {
+            case Viewer: return Critic;
+            case Critic: return Expert;
+            case Expert: return Admin;
+            default: return Admin;
+        }
+    }
+
+    /**
+     * Strategy review limit in current role is 3^rol.weightage
+     * @return
+     */
+    public int getReviewLimit() {
+        return (int) Math.pow(3, this.getWeightage());
     }
 }
