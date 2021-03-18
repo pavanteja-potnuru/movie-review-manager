@@ -16,12 +16,6 @@ public class User {
      */
     private Role role;
 
-
-    /**
-     * 
-     * @param name
-     */
-
     /**
      * Constructor
      * @param name
@@ -38,13 +32,6 @@ public class User {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * set name
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -68,12 +55,5 @@ public class User {
      */
     public Role getRole() {
         return role;
-    }
-
-    /**
-     * set email
-     */
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

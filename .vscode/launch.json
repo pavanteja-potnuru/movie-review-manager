@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch MovieReviewManager",
+            "request": "launch",
+            "mainClass": "MovieReviewManager",
+            "projectName": "movie-review-manager_a9a4e0cd"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
