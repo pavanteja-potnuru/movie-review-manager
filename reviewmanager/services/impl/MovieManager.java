@@ -1,4 +1,4 @@
-package reviewmanager.services;
+package reviewmanager.services.impl;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -6,9 +6,10 @@ import java.util.stream.Collectors;
 
 import reviewmanager.datastore.*;
 import reviewmanager.model.*;
+import reviewmanager.services.IMovieManager;
 import reviewmanager.utils.*;
 
-public class MovieManager {
+public class MovieManager implements IMovieManager{
     private IDataStore<Movie> movieDataStore;
     private IServiceLogger serviceLogger;
 
@@ -24,7 +25,7 @@ public class MovieManager {
      * @param genere
      */
     public void createMovie(String name, LocalDate releaseDate, List<String> genreStrings) {
-        serviceLogger.logInfo(String.format("Create movie with name %s Initailized", name));
+        serviceLogger.logInfo(String.format("Create movie with name %s Initailized", name), Color.ANSI_YELLOW);
         if(movieDataStore.get(name) != null) {
             serviceLogger.logError(String.format("Create user with name %s Initailized", name));
             return;
