@@ -1,28 +1,29 @@
 package reviewmanager.services;
 
-import reviewmanager.datastore.DataStore;
-import reviewmanager.datastore.IDataStore;
+import reviewmanager.datastore.*;
 import reviewmanager.model.*;
-
+import reviewmanager.utils.*;
 public class UserManager {
     private IDataStore<User> userDataStore;
+    private IServiceLogger serviceLogger;
 
-    public UserManager() {
-        userDataStore = new DataStore<User>();
+    public UserManager(IServiceLogger serviceLogger, IDataStore<User> userDataStore) {
+        this.serviceLogger = serviceLogger;
+        this.userDataStore = userDataStore;
     }
 
     /**
      * Create user
      * @param name
-     * @throws ServiceException
      */
-    public void createUser(String name) throws ServiceException {
-        System.out.println(String.format("Create user with name %s", name));
+    public void createUser(String name) {
+        serviceLogger.logInfo(String.format("Create user with name %s Initailized", name));
         if(userDataStore.get(name) != null) {
-            throw new ServiceException(String.format("User with name:%s already exist", name));
+            serviceLogger.logError(String.format("Create user with name %s Initailized", name));
+            return;
         }
         userDataStore.create(name, new User(name));
-        System.out.println(String.format("User %s created successfully", name));
+        serviceLogger.logInfo(String.format("User %s created successfully", name));
     }
 
     /**

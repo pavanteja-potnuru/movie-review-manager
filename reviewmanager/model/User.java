@@ -35,13 +35,6 @@ public class User {
     }
 
     /**
-     * set name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * get email
      * @return
      */
@@ -62,12 +55,5 @@ public class User {
      */
     public Role getRole() {
         return role;
-    }
-
-    /**
-     * set email
-     */
-    public void setRole(Role role) {
-        this.role = role;
     }
 }
