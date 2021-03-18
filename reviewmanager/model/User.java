@@ -16,12 +16,6 @@ public class User {
      */
     private Role role;
 
-
-    /**
-     * 
-     * @param name
-     */
-
     /**
      * Constructor
      * @param name

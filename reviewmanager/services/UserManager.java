@@ -1,25 +1,28 @@
 package reviewmanager.services;
-import java.util.*;
+
+import reviewmanager.datastore.DataStore;
+import reviewmanager.datastore.IDataStore;
 import reviewmanager.model.*;
 
 public class UserManager {
-
-    private HashMap<String, User> users;
+    private IDataStore<User> userDataStore;
 
     public UserManager() {
-        users = new HashMap<String, User>();
+        userDataStore = new DataStore<User>();
     }
 
     /**
      * Create user
      * @param name
+     * @throws ServiceException
      */
-    public String createUser(String name) {
-        if(users.get(name) != null) {
-            return String.format("User with name:%s already exist", name);
+    public void createUser(String name) throws ServiceException {
+        System.out.println(String.format("Create user with name %s", name));
+        if(userDataStore.get(name) != null) {
+            throw new ServiceException(String.format("User with name:%s already exist", name));
         }
-        users.put(name, new User(name));
-        return "Successfully created";
+        userDataStore.create(name, new User(name));
+        System.out.println(String.format("User %s created successfully", name));
     }
 
     /**
@@ -28,7 +31,7 @@ public class UserManager {
      * @return
      */
     public User getUser(String name) {
-        return users.get(name);
+        return userDataStore.get(name);
     }
 
     /**
@@ -37,8 +40,8 @@ public class UserManager {
      * @return
      */
     public void printUsers() {
-        users.forEach((name, user) -> {
-            System.out.println(name);
+        userDataStore.getCollectionStream().forEach((userkvp) -> {
+            System.out.println(userkvp.getKey());
         });
     }
 }
