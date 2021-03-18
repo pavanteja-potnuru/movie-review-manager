@@ -1,7 +1,8 @@
-package reviewmanager.datastore;
+package reviewmanager.datastore.impl;
 
 import java.util.HashMap;
 import java.util.stream.Stream;
+import reviewmanager.datastore.IDataStore;
 
 public class DataStore<T> implements IDataStore<T> {
     private HashMap<String, T> collection;
