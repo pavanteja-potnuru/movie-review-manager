@@ -8,13 +8,13 @@ public class Movie {
     private float rating;
     private int noOfRatings;
     private LocalDate releaseDate;
-    private Set<String> genres;
+    private Set<Genre> genres;
 
     /**
      * Constructor
      * @param name
      */
-    public Movie(String name, LocalDate releaseDate, HashSet<String> genres) {
+    public Movie(String name, LocalDate releaseDate, HashSet<Genre> genres) {
         this.name = name;
         this.rating = 0;
         this.noOfRatings = 0;
@@ -34,7 +34,7 @@ public class Movie {
         return noOfRatings;
     }
 
-    public Set<String> getGenres() {
+    public Set<Genre> getGenres() {
         return genres;
     }
 

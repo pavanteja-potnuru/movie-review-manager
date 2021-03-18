@@ -23,13 +23,14 @@ public class MovieManager {
      * @param releaseDate
      * @param genere
      */
-    public void createMovie(String name, LocalDate releaseDate, List<String> genere) {
+    public void createMovie(String name, LocalDate releaseDate, List<String> genreStrings) {
         serviceLogger.logInfo(String.format("Create movie with name %s Initailized", name));
         if(movieDataStore.get(name) != null) {
             serviceLogger.logError(String.format("Create user with name %s Initailized", name));
             return;
         }
-        movieDataStore.create(name, new Movie(name, releaseDate, (HashSet<String>) genere.stream().collect(Collectors.toSet())));
+        HashSet<Genre> genres = (HashSet<Genre>)genreStrings.stream().map((genre) -> {return Genre.valueOf(genre.toUpperCase());}).collect(Collectors.toSet());
+        movieDataStore.create(name, new Movie(name, releaseDate, genres));
         serviceLogger.logInfo(String.format("Movie %s created successfully", name));
     }
 
