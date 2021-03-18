@@ -7,14 +7,15 @@ public class User {
     private String name;
 
     /**
-     * email id
-     */
-    private String email;
-
-    /**
      * user role
      */
     private Role role;
+
+    /**
+     * reviewcount mod(role.getReviewLimit()) in current role
+     * Stores the remainder
+     */
+    private int reviewCount;
 
     /**
      * Constructor
@@ -23,7 +24,7 @@ public class User {
     public User(String name) {
         this.name = name;
         this.role = Role.Viewer;
-        this.email = null;
+        this.reviewCount = 0;
     }
 
     /**
@@ -35,25 +36,21 @@ public class User {
     }
 
     /**
-     * get email
-     * @return
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * set email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    /**
      * get role
      * @return
      */
     public Role getRole() {
         return role;
+    }
+
+    /**
+     * increments review count in current role
+     */
+    public void incrementReviewCount() {
+        reviewCount++;
+        if(reviewCount == role.getReviewLimit()) {
+            role = role.nextRole();
+            reviewCount = 0;
+        }
     }
 }

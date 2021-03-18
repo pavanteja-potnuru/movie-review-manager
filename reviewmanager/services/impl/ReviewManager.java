@@ -26,42 +26,46 @@ public class ReviewManager implements IReviewManager {
         try{
             serviceLogger.logInfo(String.format("Initialized: Add movie(%s) review by user %s", movieName, userName), Color.ANSI_YELLOW);
 
-            if(getReview(userName, movieName) != null) {
-                throw new ServiceException(String.format("User %s already reviewed Movie(%s)", userName, movieName));
-            }
-
+            validateInput(userName, movieName);    
             User user = userDataStore.get(userName);
             if(user == null) {
                 throw new ServiceException(String.format("User with name %s doesn't exist", userName));
             }
 
-            Movie movie = movieDataStore.get(movieName);
-            if(movie == null) {
-                throw new ServiceException(String.format("Movie with name %s doesn't exist", movieName));
-            }
-            if(movie.getReleaseDate().compareTo(LocalDate.now()) > 0) {
-                throw new ServiceException(String.format("Movie(%s) not released yet", movieName));
-            }
+            // TODO: instead of taking count as id generate hash combining movieName and userName.
+            // To add feasability for remove movie functionality
+            // Add review
+            reviewDataStore.createOrUpdate(String.valueOf(reviewDataStore.getCount()), new Review(movieName, userName, rating, user.getRole(), LocalDate.now()));
 
-            reviewDataStore.create(String.valueOf(reviewDataStore.getCount()), new Review(movieName, userName, rating, user.getRole(), LocalDate.now()));
+            // Update user review count and update datastore
+            user.incrementReviewCount();
+            userDataStore.createOrUpdate(userName, user);
 
             serviceLogger.logInfo(String.format("Completed: Add movie(%s) review by user %s", movieName, userName));
         }
         catch(ServiceException ex) {
             serviceLogger.logError(ex.getMessage());
         }
-        catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
-    public Review getReview(String userName, String movieName) {
+    private void validateInput(String userName, String movieName) throws ServiceException {
+
+        // TODO: change strategy of storing key/id in datastore for review collection
+        // Calculate hash combining userName and movieName. to make get call simpler. 
         Entry<String, Review> reviewObj = reviewDataStore.getCollectionStream()
         .filter(reviewItem -> Objects.equals(reviewItem.getValue().getMovieName(), movieName) && Objects.equals(reviewItem.getValue().getUserName(), userName)) 
         .findFirst().orElse(null);
-        if(reviewObj == null) {
-            return null;
+        if(reviewObj != null) {
+            throw new ServiceException(String.format("User %s already reviewed Movie(%s)", userName, movieName));
         }
-        return reviewObj.getValue();
+
+        Movie movie = movieDataStore.get(movieName);
+        if(movie == null) {
+            throw new ServiceException(String.format("Movie with name %s doesn't exist", movieName));
+        }
+
+        if(movie.getReleaseDate().compareTo(LocalDate.now()) > 0) {
+            throw new ServiceException(String.format("You can not review Movie(%s) that is not released yet", movieName));
+        }
     }
 }
