@@ -6,20 +6,26 @@ import java.util.stream.Stream;
 public interface IDataStore<T> {
     /**
      * Create Object inside dataStore
-     * @param name
+     * @param id
      */
-    public void create(String name, T t);
+    public void create(String id, T t);
 
     /**
      * Get object from datastore
-     * @param name
+     * @param id
      * @return
      */
-    public T get(String name);
+    public T get(String id);
 
     /**
      * Get all objects as Stream
      * @return
      */
     public Stream<HashMap.Entry<String,T>> getCollectionStream();
+
+    /**
+     * get count
+     * @return no of elements in datastore
+     */
+    public int getCount();
 }
