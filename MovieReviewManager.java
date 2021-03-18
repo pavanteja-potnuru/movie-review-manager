@@ -1,9 +1,8 @@
 import java.time.LocalDate;
 import java.util.*;
-import reviewmanager.datastore.*;
-import reviewmanager.model.*;
+import reviewmanager.factory.*;
+import reviewmanager.factory.impl.*;
 import reviewmanager.services.*;
-import reviewmanager.services.impl.*;
 import reviewmanager.utils.*;
 
 /**
@@ -11,25 +10,26 @@ import reviewmanager.utils.*;
  */
 public class MovieReviewManager {
     private static IServiceLogger serviceLogger;
-    private static IDataStore<User> userDataStore;
-    private static IDataStore<Movie> movieDataStore;
-    private static IDataStore<Review> reviewDataStore;
+
+    private static IDataFactory dataFactory;
+
     private static IUserManager userManager;
     private static IMovieManager movieManager;
     private static IReviewManager reviewManager;
+    private static IServiceFactory serviceFactory;
+    
     static {
         // utilities
         serviceLogger = new ServiceLogger();
 
         // datastores
-        userDataStore = new DataStore<User>();
-        movieDataStore = new DataStore<Movie>();
-        reviewDataStore = new DataStore<Review>();
+        dataFactory = new DataFactory();
 
         // services
-        userManager = new UserManager(serviceLogger, userDataStore);
-        movieManager = new MovieManager(serviceLogger, movieDataStore);
-        reviewManager = new ReviewManager(serviceLogger, reviewDataStore, userDataStore);
+        serviceFactory = new ServiceFactory(serviceLogger, dataFactory);
+        userManager = serviceFactory.getUserManager();
+        movieManager = serviceFactory.getMovieManager();
+        reviewManager = serviceFactory.getReviewManager();
     }
     public static void main(String[] args) {
         try{
