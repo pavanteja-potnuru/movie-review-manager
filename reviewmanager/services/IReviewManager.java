@@ -1,5 +1,7 @@
 package reviewmanager.services;
 
+import java.util.List;
+
 public interface IReviewManager {
 
     /**
@@ -11,10 +13,12 @@ public interface IReviewManager {
     public void addReview(String userName, String movieName, int rating);
 
     /**
-     * print all movies that match given role and genre
+     * List top n movies by role in a particular genre.
+     * @param n
      * @param byRole
      * @param inGenre
+     * @return
      */
-    public void printMovies(String byRole, String inGenre);
+    public List<String> topNMoviesWithRoleGenre(int n, String byRole, String inGenre);
     
 }
