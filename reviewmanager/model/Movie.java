@@ -5,8 +5,6 @@ import java.util.*;
 
 public class Movie {
     private String name;
-    private float rating;
-    private int noOfRatings;
     private LocalDate releaseDate;
     private Set<Genre> genres;
 
@@ -16,22 +14,12 @@ public class Movie {
      */
     public Movie(String name, LocalDate releaseDate, HashSet<Genre> genres) {
         this.name = name;
-        this.rating = 0;
-        this.noOfRatings = 0;
         this.releaseDate = releaseDate;
         this.genres = genres;
     }
 
     public String getName() {
         return name;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public int getNoOfRatings() {
-        return noOfRatings;
     }
 
     public Set<Genre> getGenres() {

@@ -11,7 +11,7 @@ public class Review {
     public Review(String movieName, String userName, int rating, Role userRole, LocalDate reviewDate) {
         this.movieName = movieName;
         this.userName = userName;
-        this.rating = rating*(userRole.getWeightage());
+        this.rating = rating;
         this.userRole = userRole;
         this.reviewDate = reviewDate;
     }
