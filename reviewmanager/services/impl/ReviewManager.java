@@ -23,20 +23,18 @@ public class ReviewManager implements IReviewManager {
         movieDataStore = dataFactory.getMoviewDataStore();
     }
 
+    /**
+     * Add review
+     */
     public void addReview(String userName, String movieName, int rating) {
         try{
             serviceLogger.logInfo(String.format("Initialized: Add movie(%s) review by user %s", movieName, userName), Color.ANSI_YELLOW);
 
-            validateInput(userName, movieName);    
-            User user = userDataStore.get(userName);
-            if(user == null) {
-                throw new ServiceException(String.format("User with name %s doesn't exist", userName));
-            }
+            validateInput(userName, movieName, rating);
 
-            // TODO: instead of taking count as id generate hash combining movieName and userName.
-            // To add feasability for remove movie functionality
-            // Add review
-            reviewDataStore.createOrUpdate(String.valueOf(reviewDataStore.getCount()), new Review(movieName, userName, rating, user.getRole(), LocalDate.now()));
+            User user = userDataStore.get(userName);
+            // Create review with userName and movieName given
+            reviewDataStore.createOrUpdate(generateReviewId(movieName, userName), new Review(movieName, userName, rating, user.getRole(), LocalDate.now()));
 
             // Update user review count and update datastore
             user.incrementReviewCount();
@@ -49,8 +47,15 @@ public class ReviewManager implements IReviewManager {
         }
     }
 
+    public double averageReview(String movieName) {
+        return reviewDataStore.getCollectionStream()
+        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getMovieName(), movieName))
+        .collect(averagingWeighted());
+    }
 
-    // List movies by role in a particular genre.
+    /**
+     * List movies by role in a particular genre.
+     */
     public void printMovies(String byRole, String inGenre) {
         reviewDataStore.getCollectionStream()
         .filter(reviewItem -> Objects.equals(reviewItem.getValue().getUserRole(), Role.valueOf(byRole)))
@@ -58,32 +63,34 @@ public class ReviewManager implements IReviewManager {
         .forEach(reviewItem -> System.out.println(reviewItem.getValue().getMovieName()));
     }
 
-    public double averageReview(String movieName) {
-        return reviewDataStore.getCollectionStream()
-        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getMovieName(), movieName))
-        .collect(averagingWeighted());
-    }
-
 //#region private
-    private void validateInput(String userName, String movieName) throws ServiceException {
+    private void validateInput(String userName, String movieName, int rating) throws ServiceException {
 
-        // TODO: change strategy of storing key/id in datastore for review collection
-        // Calculate hash combining userName and movieName. to make get call simpler. 
-        Entry<String, Review> reviewObj = reviewDataStore.getCollectionStream()
-        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getMovieName(), movieName) && Objects.equals(reviewItem.getValue().getUserName(), userName)) 
-        .findFirst().orElse(null);
-        if(reviewObj != null) {
-            throw new ServiceException(String.format("User %s already reviewed Movie(%s)", userName, movieName));
+        // Check whether rating is valid or not
+        if(rating < 0 || rating >10 ) {
+            throw new ServiceException(String.format("Rating is out of range: should be 1 to 10", userName, movieName));
         }
 
+        // validate whether a user with name exists or not
+        if(userDataStore.get(userName) == null) {
+            throw new ServiceException(String.format("User with name %s doesn't exist", userName));
+        }
+
+        // validate whether a movie with name exists or not
         Movie movie = movieDataStore.get(movieName);
         if(movie == null) {
             throw new ServiceException(String.format("Movie with name %s doesn't exist", movieName));
         }
-
+        // Check whther movie already released or not
         if(movie.getReleaseDate().compareTo(LocalDate.now()) > 0) {
             throw new ServiceException(String.format("You can not review Movie(%s) that is not released yet", movieName));
         }
+
+        // check with movie with same reviewId exist or not
+        if(reviewDataStore.get(generateReviewId(movieName, userName)) != null) {
+            throw new ServiceException(String.format("User %s already reviewed Movie(%s)", userName, movieName));
+        }
+
     }
     private Collector<Entry<String, Review>,?,Double> averagingWeighted() {
         class Box {
@@ -99,6 +106,16 @@ public class ReviewManager implements IReviewManager {
                  (b1, b2) -> { b1.num += b2.num; b1.denom += b2.denom; return b1; },
                  b -> b.num / b.denom
                );
+    }
+
+    /**
+     * generate movieId from movieName and userName
+     * @param movieName
+     * @param userName
+     * @return
+     */
+    private String generateReviewId(String movieName, String userName) {
+        return Integer.toString(movieName.length()) + "_" + movieName + userName;
     }
     
 //#endregion private
