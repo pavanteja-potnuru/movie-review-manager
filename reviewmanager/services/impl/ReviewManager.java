@@ -1,6 +1,8 @@
 package reviewmanager.services.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import reviewmanager.datastore.IDataStore;
@@ -8,6 +10,7 @@ import reviewmanager.factory.IDataFactory;
 import reviewmanager.model.*;
 import reviewmanager.services.IReviewManager;
 import reviewmanager.utils.IServiceLogger;
+import reviewmanager.utils.ServiceUtils;
 
 public class ReviewManager implements IReviewManager {
     private IDataStore<Review> reviewDataStore;
@@ -52,13 +55,13 @@ public class ReviewManager implements IReviewManager {
     }
 
     /**
-     * List movies by role in a particular genre.
+     * List top n movies by role in a particular genre.
      */
-    public void printMovies(String byRole, String inGenre) {
-        reviewDataStore.getCollectionStream()
+    public List<String> topNMoviesWithRoleGenre(int n, String byRole, String inGenre) {
+        return new ArrayList<String>(reviewDataStore.getCollectionStream()
         .filter(reviewItem -> Objects.equals(reviewItem.getValue().getUserRole(), Role.valueOf(byRole)))
         .filter(reviewItem -> movieDataStore.get(reviewItem.getValue().getMovieName()).getGenres().contains(Genre.valueOf(inGenre.toUpperCase())))
-        .forEach(reviewItem -> System.out.println(reviewItem.getValue().getMovieName()));
+        .collect(ServiceUtils.topRatedMoviesWithRolenGenre(n)));
     }
 
 //#region private
