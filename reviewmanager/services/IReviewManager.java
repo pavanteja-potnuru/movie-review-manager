@@ -10,8 +10,11 @@ public interface IReviewManager {
      */
     public void addReview(String userName, String movieName, int rating);
 
-    public double averageReview(String movieName);
-
+    /**
+     * print all movies that match given role and genre
+     * @param byRole
+     * @param inGenre
+     */
     public void printMovies(String byRole, String inGenre);
     
 }

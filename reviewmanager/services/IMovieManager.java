@@ -11,12 +11,26 @@ public interface IMovieManager {
      * @param releaseDate
      * @param genere
      */
-    void addMovie(String string, LocalDate of, List<String> asList);
+    public void addMovie(String string, LocalDate of, List<String> asList);
+
+    /**
+     * Get average rating
+     * @param movieName
+     * @return average rating
+     */
+    public float getAverageRating(String movieName);
+
+    /**
+     * Return top rated n movies.
+     * If two movies have same rating latest released movie is preferred. 
+     * @param n
+     * @return names of top rated n movies
+     */
+    public List<String> getTopNRatedMovies(int n);
     
     /**
      * print movies
      * @param name
-     * @return
      */
     public void printMovies();
 }

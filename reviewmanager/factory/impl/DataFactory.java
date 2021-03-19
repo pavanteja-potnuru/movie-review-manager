@@ -6,9 +6,9 @@ import reviewmanager.factory.IDataFactory;
 import reviewmanager.model.*;
 
 public class DataFactory implements IDataFactory{
-    private static IDataStore<User> userDataStore;
-    private static IDataStore<Movie> movieDataStore;
-    private static IDataStore<Review> reviewDataStore;
+    private IDataStore<User> userDataStore;
+    private IDataStore<Movie> movieDataStore;
+    private IDataStore<Review> reviewDataStore;
     public DataFactory() {
         userDataStore = new DataStore<User>();
         movieDataStore = new DataStore<Movie>();

@@ -12,9 +12,9 @@ import reviewmanager.utils.IServiceLogger;
 
 public class ServiceFactory implements IServiceFactory{
 
-    private static IUserManager userManager;
-    private static IMovieManager movieManager;
-    private static IReviewManager reviewManager;
+    private IUserManager userManager;
+    private IMovieManager movieManager;
+    private IReviewManager reviewManager;
 
     public ServiceFactory(IServiceLogger serviceLogger, IDataFactory dataFactory) {
         userManager = new UserManager(serviceLogger, dataFactory.getUserDataStore());
