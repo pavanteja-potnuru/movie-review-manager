@@ -36,6 +36,7 @@ reviewManager.addReview("Harsh", "Guru", 10);
 reviewManager.addReview("Harsh", "Lunchbox", 9);
 reviewManager.addReview("Harsh", "Metro", 7);
 reviewManager.addReview("Harsh", "Bahubali2", 10);
+reviewManager.addReview("Harsh", "Tiger", 9);
 
 System.out.println("------------------------/Print Logs\\------------------------");
 serviceLogger.printLogs();
@@ -44,7 +45,7 @@ userManager.printUsers();
 System.out.println("------------------------/Print Movies with average rating\\------------------------");
 movieManager.printMovies();
 System.out.println("------------------------/Print Movies by role and in genre\\------------------------");
-reviewManager.printMovies("Critic", "DRAMA");
+printList(reviewManager.topNMoviesWithRoleGenre(2, "Critic", "Drama"));
 System.out.println("------------------------/Print average review\\------------------------");
 System.out.println(movieManager.getAverageRating("Bahubali1"));
 System.out.println(movieManager.getAverageRating("Bahubali2"));
@@ -54,7 +55,7 @@ System.out.println("------------------------/\\------------------------");
 ```
 ### Output
 ```
-    ------------------------/Print Logs\------------------------
+------------------------/Print Logs\------------------------
 Log: Create user with name Pavan Initailized
 Log: User Pavan created successfully
 Log: Create user with name Yesh Initailized
@@ -113,6 +114,8 @@ Log: Initialized: Add movie(Metro) review by user Harsh
 Log: Completed: Add movie(Metro) review by user Harsh
 Log: Initialized: Add movie(Bahubali2) review by user Harsh
 Log: Completed: Add movie(Bahubali2) review by user Harsh
+Log: Initialized: Add movie(Tiger) review by user Harsh
+Log: Completed: Add movie(Tiger) review by user Harsh
 ------------------------/Print Users\------------------------
 Pavan Critic
 Srinivas Viewer
@@ -127,7 +130,7 @@ Guru :  10.0
 Metro : 8.5
 Padmaavat :     8.666666984558105
 Lunchbox :      9.666666984558105
-Tiger : 0.0
+Tiger : 9.0
 ------------------------/Print Movies by role and in genre\------------------------
 Lunchbox
 ------------------------/Print average review\------------------------
