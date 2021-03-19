@@ -11,12 +11,11 @@ public interface IMovieManager {
      * @param releaseDate
      * @param genere
      */
-    void addMovie(String string, LocalDate of, List<String> asList);
+    public void addMovie(String string, LocalDate of, List<String> asList);
     
     /**
      * print movies
      * @param name
-     * @return
      */
     public void printMovies();
 }

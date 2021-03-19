@@ -11,7 +11,6 @@ public interface IUserManager {
     /**
      * Print all Users
      * @param name
-     * @return
      */
     public void printUsers();
 

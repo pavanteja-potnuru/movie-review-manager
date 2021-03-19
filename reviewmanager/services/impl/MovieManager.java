@@ -38,6 +38,18 @@ public class MovieManager implements IMovieManager{
     }
 
     /**
+     * print movies
+     * @param name
+     * @return
+     */
+    public void printMovies() {
+        movieDataStore.getCollectionStream().forEach((userkvp) -> {
+            System.out.println(userkvp.getKey());
+        });
+    }
+
+//#region private
+    /**
      * Validate input
      * @param name
      * @return
@@ -48,15 +60,5 @@ public class MovieManager implements IMovieManager{
             throw new ServiceException(String.format("Movie with name %s already exists", name));
         }
     }
-
-    /**
-     * print movies
-     * @param name
-     * @return
-     */
-    public void printMovies() {
-        movieDataStore.getCollectionStream().forEach((userkvp) -> {
-            System.out.println(userkvp.getKey());
-        });
-    }
+//#endregion private
 }
