@@ -2,7 +2,6 @@ package reviewmanager.utils;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.stream.Collector;
@@ -10,14 +9,6 @@ import java.util.stream.Collector;
 import reviewmanager.model.*;
 
 public class ServiceUtils {
-    private static class Box {
-        float num = 0;
-        long denom = 0;
-        Box(int num,int denom) {
-            this.num = num;
-            this.denom = denom;
-        }
-    }
     public static Collector<Entry<String, Movie>,?, Collection<String>> topRatedMoviesCollector(int n) {
         return Collector.of(
                 () -> new TreeMap<Float, String>(),
@@ -44,26 +35,19 @@ public class ServiceUtils {
     public static Collector<Entry<String, Review>, ?, Collection<String>> topRatedMoviesWithRolenGenre(int n) {
         
         return Collector.of(
-                () -> new HashMap<String, Box>(),
+                () -> new HashMap<String, Integer>(),
                 (hMap, e) -> { 
                     final Review review = e.getValue();
                     if(hMap.containsKey(review.getMovieName())) {
-                        final Box box = hMap.get(review.getMovieName());
-                        box.num +=  review.getRating() * review.getUserRole().getWeightage(); 
-                        box.denom += review.getUserRole().getWeightage();
-                        hMap.put(review.getMovieName(), box);
+                        hMap.put(review.getMovieName(), hMap.get(review.getMovieName())+review.getRating());
                     } else {
-                        hMap.put(review.getMovieName(),
-                            new Box(review.getRating() * review.getUserRole().getWeightage(), review.getUserRole().getWeightage()));
+                        hMap.put(review.getMovieName(), review.getRating());
                     }
                 },
                 (hMap1, hMap2) -> {
                     hMap2.forEach((key, value) -> {
                         if(hMap1.containsKey(key)){
-                            Box box1 = hMap1.get(key);
-                            box1.num += value.num;
-                            box1.denom += value.denom;
-                            hMap1.put(key, box1);
+                            hMap1.put(key, hMap1.get(key)+value);
                         }
                         else {
                             hMap1.put(key, value);
@@ -73,14 +57,13 @@ public class ServiceUtils {
                     return hMap1;
                 },
                 mrMap -> {
-                    TreeMap<Float, String> tmap = new TreeMap<Float, String>();
+                    TreeMap<Integer, String> tmap = new TreeMap<Integer, String>();
                     mrMap.forEach(
                     (key, value)-> {
-                        float rating = (Float)(value.num)/value.denom;
-                        if(tmap.size() == n && tmap.firstKey() < rating)
+                        if(tmap.size() == n && tmap.firstKey() < value)
                             tmap.pollFirstEntry();
-                        if(tmap.size() < n  || tmap.firstKey() < rating)
-                            tmap.put(rating, key);
+                        if(tmap.size() < n  || tmap.firstKey() < value)
+                            tmap.put(value, key);
                     });
 
                     return tmap.values();
