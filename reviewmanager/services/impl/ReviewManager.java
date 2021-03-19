@@ -1,8 +1,19 @@
 package reviewmanager.services.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IntSummaryStatistics;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
+
+import javax.swing.Action;
 
 import reviewmanager.datastore.IDataStore;
 import reviewmanager.factory.IDataFactory;
@@ -48,6 +59,22 @@ public class ReviewManager implements IReviewManager {
         }
     }
 
+
+    // List movies by role in a particular genre.
+    public void printMovies(String byRole, String inGenre) {
+        reviewDataStore.getCollectionStream()
+        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getUserRole(), Role.valueOf(byRole)))
+        .filter(reviewItem -> movieDataStore.get(reviewItem.getValue().getMovieName()).getGenres().contains(Genre.valueOf(inGenre.toUpperCase())))
+        .forEach(reviewItem -> System.out.println(reviewItem.getValue().getMovieName()));
+    }
+
+    public double averageReview(String movieName) {
+        return reviewDataStore.getCollectionStream()
+        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getMovieName(), movieName))
+        .collect(averagingWeighted());
+    }
+
+//#region private
     private void validateInput(String userName, String movieName) throws ServiceException {
 
         // TODO: change strategy of storing key/id in datastore for review collection
@@ -68,4 +95,21 @@ public class ReviewManager implements IReviewManager {
             throw new ServiceException(String.format("You can not review Movie(%s) that is not released yet", movieName));
         }
     }
+    private Collector<Entry<String, Review>,?,Double> averagingWeighted() {
+        class Box {
+            double num = 0;
+            long denom = 0;
+        }
+        return Collector.of(
+                 Box::new,
+                 (b, e) -> { 
+                     b.num +=  e.getValue().getRating() * e.getValue().getUserRole().getWeightage(); 
+                     b.denom += e.getValue().getUserRole().getWeightage();
+                 },
+                 (b1, b2) -> { b1.num += b2.num; b1.denom += b2.denom; return b1; },
+                 b -> b.num / b.denom
+               );
+    }
+    
+//#endregion private
 }

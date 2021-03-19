@@ -51,26 +51,41 @@ public class MovieReviewManager {
             movieManager.addMovie("Saina", LocalDate.of(2021, 03, 26), Arrays.asList("Sport"));
 
             reviewManager.addReview("Pavan", "Bahubali1", 10);
-            reviewManager.addReview("Pavan", "Bahubali2", 10);
             reviewManager.addReview("Pavan", "Padmaavat", 10);
             reviewManager.addReview("Pavan", "Guru", 10);
             reviewManager.addReview("Pavan", "Lunchbox", 10);
             reviewManager.addReview("Pavan", "Bahubali2", 10);
             reviewManager.addReview("Pavan", "Metro", 10);
             reviewManager.addReview("Pavan", "Saina", 10);
+            
+            reviewManager.addReview("Yesh", "Bahubali1", 9);
+            reviewManager.addReview("Yesh", "Bahubali2", 8);
+            reviewManager.addReview("Yesh", "Padmaavat", 8);
+            reviewManager.addReview("Harsh", "Guru", 10);
+            reviewManager.addReview("Harsh", "Lunchbox", 9);
+            reviewManager.addReview("Harsh", "Metro", 7);
+            reviewManager.addReview("Harsh", "Bahubali2", 10);
         }
         catch (Exception ex) {
             serviceLogger.logError(ex.getMessage());
         }
         finally {
+            //Validate responses
             System.out.println("------------------------/Print Logs\\------------------------");
             serviceLogger.printLogs();
             System.out.println("------------------------/\\------------------------");
             System.out.println("------------------------/Print Users\\------------------------");
             userManager.printUsers();
             System.out.println("------------------------/\\------------------------");
-            System.out.println("------------------------/Print Users\\------------------------");
+            System.out.println("------------------------/Print Movies\\------------------------");
             movieManager.printMovies();
+            System.out.println("------------------------/\\------------------------");
+            System.out.println("------------------------/Print Movies by role and in genre\\------------------------");
+            reviewManager.printMovies("Critic", "DRAMA");;
+            System.out.println("------------------------/\\------------------------");
+            System.out.println("------------------------/Print average review\\------------------------");
+            System.out.println(reviewManager.averageReview("Bahubali1"));
+            System.out.println(reviewManager.averageReview("Bahubali2"));
             System.out.println("------------------------/\\------------------------");
         }
     }

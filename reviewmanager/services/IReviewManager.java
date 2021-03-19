@@ -9,5 +9,9 @@ public interface IReviewManager {
      * @param rating
      */
     public void addReview(String userName, String movieName, int rating);
+
+    public double averageReview(String movieName);
+
+    public void printMovies(String byRole, String inGenre);
     
 }
