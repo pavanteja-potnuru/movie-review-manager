@@ -1,19 +1,9 @@
 package reviewmanager.services.impl;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.IntSummaryStatistics;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.ToDoubleFunction;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
-
-import javax.swing.Action;
 
 import reviewmanager.datastore.IDataStore;
 import reviewmanager.factory.IDataFactory;
