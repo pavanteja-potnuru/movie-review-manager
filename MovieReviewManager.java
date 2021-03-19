@@ -65,28 +65,30 @@ public class MovieReviewManager {
             reviewManager.addReview("Harsh", "Lunchbox", 9);
             reviewManager.addReview("Harsh", "Metro", 7);
             reviewManager.addReview("Harsh", "Bahubali2", 10);
+
+            System.out.println("------------------------/Print Logs\\------------------------");
+            serviceLogger.printLogs();
+            System.out.println("------------------------/Print Users\\------------------------");
+            userManager.printUsers();
+            System.out.println("------------------------/Print Movies with average rating\\------------------------");
+            movieManager.printMovies();
+            System.out.println("------------------------/Print Movies by role and in genre\\------------------------");
+            reviewManager.printMovies("Critic", "DRAMA");
+            System.out.println("------------------------/Print average review\\------------------------");
+            System.out.println(movieManager.getAverageRating("Bahubali1"));
+            System.out.println(movieManager.getAverageRating("Bahubali2"));
+            System.out.println("------------------------/Print top n rated movies\\------------------------");
+            printList(movieManager.getTopNRatedMovies(3));
+            System.out.println("------------------------/\\------------------------");
         }
         catch (Exception ex) {
             serviceLogger.logError(ex.getMessage());
         }
         finally {
-            //Validate responses
-            System.out.println("------------------------/Print Logs\\------------------------");
-            serviceLogger.printLogs();
-            System.out.println("------------------------/\\------------------------");
-            System.out.println("------------------------/Print Users\\------------------------");
-            userManager.printUsers();
-            System.out.println("------------------------/\\------------------------");
-            System.out.println("------------------------/Print Movies\\------------------------");
-            movieManager.printMovies();
-            System.out.println("------------------------/\\------------------------");
-            System.out.println("------------------------/Print Movies by role and in genre\\------------------------");
-            reviewManager.printMovies("Critic", "DRAMA");;
-            System.out.println("------------------------/\\------------------------");
-            System.out.println("------------------------/Print average review\\------------------------");
-            System.out.println(reviewManager.averageReview("Bahubali1"));
-            System.out.println(reviewManager.averageReview("Bahubali2"));
-            System.out.println("------------------------/\\------------------------");
         }
+    }
+
+    private static void printList(List<String> list) {
+        list.forEach(element -> System.out.println(element));
     }
 }

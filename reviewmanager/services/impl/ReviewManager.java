@@ -2,8 +2,6 @@ package reviewmanager.services.impl;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Map.Entry;
-import java.util.stream.Collector;
 
 import reviewmanager.datastore.IDataStore;
 import reviewmanager.factory.IDataFactory;
@@ -30,9 +28,11 @@ public class ReviewManager implements IReviewManager {
         try{
             serviceLogger.logInfo(String.format("Initialized: Add movie(%s) review by user %s", movieName, userName), Color.ANSI_YELLOW);
 
-            validateInput(userName, movieName, rating);
-
+            
+            Movie movie = movieDataStore.get(movieName);
             User user = userDataStore.get(userName);
+            validateInput(user, movie, userName, movieName, rating);
+
             // Create review with userName and movieName given
             reviewDataStore.createOrUpdate(generateReviewId(movieName, userName), new Review(movieName, userName, rating, user.getRole(), LocalDate.now()));
 
@@ -40,17 +40,15 @@ public class ReviewManager implements IReviewManager {
             user.incrementReviewCount();
             userDataStore.createOrUpdate(userName, user);
 
+            // Update movie rating and update datastore
+            movie.addRating(rating, user.getRole().getWeightage());
+            movieDataStore.createOrUpdate(movieName, movie);
+
             serviceLogger.logInfo(String.format("Completed: Add movie(%s) review by user %s", movieName, userName));
         }
         catch(ServiceException ex) {
             serviceLogger.logError(ex.getMessage());
         }
-    }
-
-    public double averageReview(String movieName) {
-        return reviewDataStore.getCollectionStream()
-        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getMovieName(), movieName))
-        .collect(averagingWeighted());
     }
 
     /**
@@ -64,7 +62,7 @@ public class ReviewManager implements IReviewManager {
     }
 
 //#region private
-    private void validateInput(String userName, String movieName, int rating) throws ServiceException {
+    private void validateInput(User user, Movie movie, String userName, String movieName, int rating) throws ServiceException {
 
         // Check whether rating is valid or not
         if(rating < 0 || rating >10 ) {
@@ -72,12 +70,11 @@ public class ReviewManager implements IReviewManager {
         }
 
         // validate whether a user with name exists or not
-        if(userDataStore.get(userName) == null) {
+        if(user == null) {
             throw new ServiceException(String.format("User with name %s doesn't exist", userName));
         }
 
         // validate whether a movie with name exists or not
-        Movie movie = movieDataStore.get(movieName);
         if(movie == null) {
             throw new ServiceException(String.format("Movie with name %s doesn't exist", movieName));
         }
@@ -91,21 +88,6 @@ public class ReviewManager implements IReviewManager {
             throw new ServiceException(String.format("User %s already reviewed Movie(%s)", userName, movieName));
         }
 
-    }
-    private Collector<Entry<String, Review>,?,Double> averagingWeighted() {
-        class Box {
-            double num = 0;
-            long denom = 0;
-        }
-        return Collector.of(
-                 Box::new,
-                 (b, e) -> { 
-                     b.num +=  e.getValue().getRating() * e.getValue().getUserRole().getWeightage(); 
-                     b.denom += e.getValue().getUserRole().getWeightage();
-                 },
-                 (b1, b2) -> { b1.num += b2.num; b1.denom += b2.denom; return b1; },
-                 b -> b.num / b.denom
-               );
     }
 
     /**

@@ -11,13 +11,6 @@ public interface IReviewManager {
     public void addReview(String userName, String movieName, int rating);
 
     /**
-     * Get average review by moviename
-     * @param movieName
-     * @return average review
-     */
-    public double averageReview(String movieName);
-
-    /**
      * print all movies that match given role and genre
      * @param byRole
      * @param inGenre
