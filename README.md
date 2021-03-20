@@ -3,7 +3,7 @@ Manages review from users
 
 
 ### Input
-```
+```java
 userManager.addUser("Pavan");
 userManager.addUser("Yesh");
 userManager.addUser("Harsh");
@@ -54,7 +54,7 @@ printList(movieManager.getTopNRatedMovies(3));
 System.out.println("------------------------/\\------------------------");
 ```
 ### Output
-```
+```console
 ------------------------/Print Logs\------------------------
 Log: Create user with name Pavan Initailized
 Log: User Pavan created successfully

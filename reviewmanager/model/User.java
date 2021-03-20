@@ -23,7 +23,7 @@ public class User {
      */
     public User(String name) {
         this.name = name;
-        this.role = Role.Viewer;
+        this.role = Role.viewer;
         this.reviewCount = 0;
     }
 

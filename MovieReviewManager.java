@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.util.*;
 import reviewmanager.factory.*;
 import reviewmanager.factory.impl.*;
+import reviewmanager.model.Color;
 import reviewmanager.services.*;
 import reviewmanager.utils.*;
 
@@ -66,26 +67,23 @@ public class MovieReviewManager {
             reviewManager.addReview("Harsh", "Metro", 7);
             reviewManager.addReview("Harsh", "Bahubali2", 10);
             reviewManager.addReview("Harsh", "Tiger", 9);
-
-            System.out.println("------------------------/Print Logs\\------------------------");
-            serviceLogger.printLogs();
+        }
+        catch (Exception ex) {
+            serviceLogger.logError(ex.getMessage(), Color.ANSI_RED);
+        }
+        finally {
             System.out.println("------------------------/Print Users\\------------------------");
             userManager.printUsers();
             System.out.println("------------------------/Print Movies with average rating\\------------------------");
             movieManager.printMovies();
-            System.out.println("------------------------/Print Movies by role and in genre\\------------------------");
-            printList(reviewManager.topNMoviesWithRoleGenre(2, "Critic", "Drama"));
+            System.out.println("------------------------/Print top n rated Movies byRole and inGenre\\------------------------");
+            printList(reviewManager.topNMoviesWithRoleGenre(2, "critic", "Drama"));
             System.out.println("------------------------/Print average review\\------------------------");
             System.out.println(movieManager.getAverageRating("Bahubali1"));
             System.out.println(movieManager.getAverageRating("Bahubali2"));
             System.out.println("------------------------/Print top n rated movies\\------------------------");
             printList(movieManager.getTopNRatedMovies(3));
             System.out.println("------------------------/\\------------------------");
-        }
-        catch (Exception ex) {
-            serviceLogger.logError(ex.getMessage());
-        }
-        finally {
         }
     }
 

@@ -58,10 +58,17 @@ public class ReviewManager implements IReviewManager {
      * List top n movies by role in a particular genre.
      */
     public List<String> topNMoviesWithRoleGenre(int n, String byRole, String inGenre) {
-        return new ArrayList<String>(reviewDataStore.getCollectionStream()
-        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getUserRole(), Role.valueOf(byRole)))
-        .filter(reviewItem -> movieDataStore.get(reviewItem.getValue().getMovieName()).getGenres().contains(Genre.valueOf(inGenre.toUpperCase())))
-        .collect(ServiceUtils.topRatedMoviesWithRolenGenre(n)));
+        try{
+            validateInput(byRole, inGenre);
+            return new ArrayList<String>(reviewDataStore.getCollectionStream()
+            .filter(reviewItem -> Objects.equals(reviewItem.getValue().getUserRole(), Role.valueOf(byRole)))
+            .filter(reviewItem -> movieDataStore.get(reviewItem.getValue().getMovieName()).getGenres().contains(Genre.valueOf(inGenre.toUpperCase())))
+            .collect(ServiceUtils.topRatedMoviesWithRolenGenre(n)));
+        }
+        catch (ServiceException ex) {
+            serviceLogger.logError(ex.getMessage());
+        }
+        return null;
     }
 
 //#region private
@@ -89,6 +96,20 @@ public class ReviewManager implements IReviewManager {
         // check with movie with same reviewId exist or not
         if(reviewDataStore.get(generateReviewId(movieName, userName)) != null) {
             throw new ServiceException(String.format("User %s already reviewed Movie(%s)", userName, movieName));
+        }
+
+    }
+
+    private void validateInput(String byRole, String inGenre) throws ServiceException {
+
+        // Validate Role
+        if(Role.valueOf(byRole.toLowerCase()) == null) {
+            throw new ServiceException(String.format("Invalid Role: %s", byRole));
+        }
+
+        // Validate Role
+        if(Genre.valueOf(inGenre.toUpperCase()) == null) {
+            throw new ServiceException(String.format("Invalid Genre: %s\n. Please find available values: %s", inGenre, Genre.values().toString()));
         }
 
     }

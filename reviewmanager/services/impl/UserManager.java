@@ -30,6 +30,18 @@ public class UserManager implements IUserManager {
     }
 
     /**
+     * Print all Users
+     * @param name
+     * @return
+     */
+    public void printUsers() {
+        userDataStore.getCollectionStream().forEach((userkvp) -> {
+            System.out.println(userkvp.getKey() + " " + userkvp.getValue().getRole());
+        });
+    }
+
+//#region private
+    /**
      * validate user by username
      * @param name
      * @return
@@ -40,15 +52,5 @@ public class UserManager implements IUserManager {
             throw new ServiceException(String.format("User with name %s already exists", name));
         }
     }
-
-    /**
-     * Print all Users
-     * @param name
-     * @return
-     */
-    public void printUsers() {
-        userDataStore.getCollectionStream().forEach((userkvp) -> {
-            System.out.println(userkvp.getKey() + " " + userkvp.getValue().getRole());
-        });
-    }
+//#endregion private
 }

@@ -27,13 +27,15 @@ public class MovieManager implements IMovieManager{
     public void addMovie(String name, LocalDate releaseDate, List<String> genreStrings) {
         try{
             serviceLogger.logInfo(String.format("Create movie with name %s Initailized", name), Color.ANSI_YELLOW);
-            validateInput(name);
-            HashSet<Genre> genres = (HashSet<Genre>)genreStrings.stream().map((genre) -> {return Genre.valueOf(genre.toUpperCase());}).collect(Collectors.toSet());
+            HashSet<Genre> genres = validateInput(name, genreStrings);
             movieDataStore.createOrUpdate(name, new Movie(name, releaseDate, genres));
             serviceLogger.logInfo(String.format("Movie %s created successfully", name));
         }
         catch(ServiceException ex) {
             serviceLogger.logError(ex.getMessage());
+        }
+        catch(Exception ex) {
+            serviceLogger.logError(ex.getMessage(), Color.ANSI_RED);
         }
     }
 
@@ -64,10 +66,14 @@ public class MovieManager implements IMovieManager{
 
 //#region private
 
-    private void validateInput(String name) throws ServiceException {
+    private HashSet<Genre> validateInput(String name, List<String> genreStrings) throws ServiceException {
         if(movieDataStore.get(name) != null) {
             throw new ServiceException(String.format("Movie with name %s already exists", name));
         }
+
+        return (HashSet<Genre>)genreStrings.stream().map((genreStr) -> {
+            return Genre.valueOf(genreStr.toUpperCase());
+        }).collect(Collectors.toSet());
     }
     
 //#endregion private

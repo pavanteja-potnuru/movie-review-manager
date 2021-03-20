@@ -1,10 +1,10 @@
 package reviewmanager.model;
 
 public enum Role {
-    Viewer (1),
-    Critic (2),
-    Expert (4),
-    Admin (8);
+    viewer (1),
+    critic (2),
+    expert (4),
+    admin (8);
 
     /**
      * weightage 
@@ -20,10 +20,10 @@ public enum Role {
 
     public Role nextRole() {
         switch(this) {
-            case Viewer: return Critic;
-            case Critic: return Expert;
-            case Expert: return Admin;
-            default: return Admin;
+            case viewer: return critic;
+            case critic: return expert;
+            case expert: return admin;
+            default: return admin;
         }
     }
 
