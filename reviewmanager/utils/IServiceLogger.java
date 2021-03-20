@@ -1,9 +1,5 @@
 package reviewmanager.utils;
 public interface IServiceLogger {
-    /**
-     * Print all logs
-     */
-    public void printLogs();
 
     /**
      * Info log with default color
