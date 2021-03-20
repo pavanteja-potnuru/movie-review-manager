@@ -70,4 +70,20 @@ public class ServiceUtils {
                 }
                 );
     }
+
+    public static Collector<Entry<String, Review>,?,Float> averagingWeighted() {
+        class Box {
+            float num = 0;
+            long denom = 0;
+        }
+        return Collector.of(
+                 Box::new,
+                 (b, e) -> { 
+                     b.num +=  e.getValue().getRating() * e.getValue().getUserRole().getWeightage(); 
+                     b.denom += e.getValue().getUserRole().getWeightage();
+                 },
+                 (b1, b2) -> { b1.num += b2.num; b1.denom += b2.denom; return b1; },
+                 b -> b.num / b.denom
+               );
+    }
 }
