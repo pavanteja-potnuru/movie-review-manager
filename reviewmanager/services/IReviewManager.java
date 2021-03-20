@@ -20,5 +20,13 @@ public interface IReviewManager {
      * @return
      */
     public List<String> topNMoviesWithRoleGenre(int n, String byRole, String inGenre);
+
+    /**
+     * Get average review given by user on movies released in a particular year
+     * @param userName
+     * @param year
+     * @return
+     */
+    public float getAverageReview(String userName, int year);
     
 }

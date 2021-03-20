@@ -71,6 +71,13 @@ public class ReviewManager implements IReviewManager {
         return null;
     }
 
+    public float getAverageReview(String userName, int year) {
+        return reviewDataStore.getCollectionStream()
+        .filter(reviewItem -> Objects.equals(reviewItem.getValue().getUserName(), userName))
+        .filter(reviewItem -> Objects.equals(movieDataStore.get(reviewItem.getValue().getMovieName()).getReleaseDate().getYear(), year))
+        .collect(ServiceUtils.averagingWeighted());
+    }
+
 //#region private
     private void validateInput(User user, Movie movie, String userName, String movieName, int rating) throws ServiceException {
 

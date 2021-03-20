@@ -52,12 +52,12 @@ public class MovieReviewManager {
             movieManager.addMovie("Saina", LocalDate.of(2021, 03, 26), Arrays.asList("Sport"));
 
             reviewManager.addReview("Pavan", "Bahubali1", 10);
-            reviewManager.addReview("Pavan", "Padmaavat", 10);
-            reviewManager.addReview("Pavan", "Guru", 10);
-            reviewManager.addReview("Pavan", "Lunchbox", 10);
+            reviewManager.addReview("Pavan", "Padmaavat", 9);
+            reviewManager.addReview("Pavan", "Guru", 8);
+            reviewManager.addReview("Pavan", "Lunchbox", 8);
             reviewManager.addReview("Pavan", "Bahubali2", 10);
-            reviewManager.addReview("Pavan", "Metro", 10);
-            reviewManager.addReview("Pavan", "Saina", 10);
+            reviewManager.addReview("Pavan", "Metro", 9);
+            reviewManager.addReview("Pavan", "Saina", 8);
             
             reviewManager.addReview("Yesh", "Bahubali1", 9);
             reviewManager.addReview("Yesh", "Bahubali2", 8);
@@ -81,6 +81,8 @@ public class MovieReviewManager {
             System.out.println("------------------------/Print average review\\------------------------");
             System.out.println(movieManager.getAverageRating("Bahubali1"));
             System.out.println(movieManager.getAverageRating("Bahubali2"));
+            System.out.println("------------------------/Print average review given by user to movies released in a particular year\\------------------------");
+            System.out.println(reviewManager.getAverageReview("Pavan", 2008));
             System.out.println("------------------------/Print top n rated movies\\------------------------");
             printList(movieManager.getTopNRatedMovies(3));
             System.out.println("------------------------/\\------------------------");
